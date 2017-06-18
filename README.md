@@ -6,12 +6,12 @@
 * Install [Vagrant](https://www.vagrantup.com/downloads.html) (>=1.8.5 version)
 * Install [Vagrant Host Manager plugin](https://github.com/devopsgroup-io/vagrant-hostmanager) (`vagrant plugin install vagrant-hostmanager`)
 * Install [Vagrant Virtual Box guest additions plugin](https://github.com/dotless-de/vagrant-vbguest) (`vagrant plugin install vagrant-vbguest`)
-* If you've got too many dependencies and github asks for authorization then you need to copy `./ansible/vars/locals.yml.dist` to `./ansible/vars/locals.yml` and put there your GitHub token.
+* If your application has too many composer dependencies and github asks for authorization then you need to copy `./ansible/vars/locals.yml.dist` to `./ansible/vars/locals.yml` and put there your GitHub token.
 * Run `vagrant up`
 
 #### Test virtual hosts:
 
-* [http://www.phanbox.local/]((http://www.phanbox.local/) - PHP application home page (index.php)
+* [http://www.phanbox.local/](http://www.phanbox.local/) - PHP application home page (index.php)
 * [http://phanbox.local/](http://phanbox.local/)
 * [http://phanbox.local/phpinfo.php](http://phanbox.local/phpinfo.php) - PHP info page
 * [http://phanbox.local/index.html](http://phanbox.local/index.html) - Static HTML page served by NGINX
