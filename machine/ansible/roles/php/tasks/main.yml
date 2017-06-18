@@ -1,0 +1,23 @@
+---
+- name: Remove all existing PHP packages
+  become: true
+  apt: pkg=php7* autoremove=yes purge=yes
+
+- name: Add repository for Ubuntu
+  become: true
+  apt_repository: repo={{ php_ppa }}
+
+- name: Update apt
+  become: true
+  apt: update_cache=yes
+
+- name: Install PHP Packages
+  become: true
+  apt: pkg={{ item }} state=latest
+  with_items: "{{ php_packages }}"
+  when: php_packages is defined
+  notify:
+    - restart php7-fpm
+    - restart nginx
+
+- include: configure.yml

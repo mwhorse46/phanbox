@@ -1,0 +1,42 @@
+---
+- name: Update apt
+  become: yes
+  apt: update_cache=yes
+
+- name: Install System Packages
+  become: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - curl
+    - wget
+    - python-software-properties
+
+- name: Install Extra Packages
+  become: yes
+  apt: pkg={{ item }} state=latest
+  with_items: "{{ server_packages }}"
+  when: server_packages is defined
+
+- name: Configure the timezone
+  become: yes
+  template: src=timezone.j2 dest=/etc/timezone
+
+- name: More Configure the timezone
+  become: yes
+  file: src=/usr/share/zoneinfo/{{server_timezone}} dest=/etc/localtime state=link force=yes backup=yes
+
+- name: Set default system language pack
+  shell: locale-gen {{ server_locale }}
+  become: yes
+
+- name: Set default system language vars
+  become: yes
+  lineinfile:
+    dest: /etc/default/locale
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^LANG\b", line: "LANG={{ server_locale }}" }
+    - { regexp: "^LANGUAGE\b", line: "LANGUAGE={{ server_locale }}" }
+    - { regexp: "^LC_ALL\b", line: "LC_ALL={{ server_locale }}" }
+

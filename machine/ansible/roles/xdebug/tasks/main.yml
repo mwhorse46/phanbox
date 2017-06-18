@@ -1,0 +1,14 @@
+---
+- name: Install xDebug
+  become: yes
+  apt: pkg=php-xdebug state=latest
+
+- name: Set xDebug parameters
+  lineinfile:
+    dest: /etc/php/7.1/mods-available/xdebug.ini
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^xdebug.remote_enable", line: "xdebug.remote_enable=on" }
+    - { regexp: "^xdebug.remote_connect_back", line: "xdebug.remote_connect_back=on" }
+    - { regexp: "^xdebug.idekey", line: "xdebug.idekey={{  xdebug.idekey }}" }

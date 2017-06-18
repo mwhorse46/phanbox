@@ -1,0 +1,5 @@
+---
+- name: Install npm dependecies
+  become: true
+  become_user: vagrant
+  shell: cd {{ app_node.root }} && npm install --no-bin-links

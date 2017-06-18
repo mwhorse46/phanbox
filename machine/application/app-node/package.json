@@ -1,0 +1,13 @@
+{
+  "name": "phanbox-app-node",
+  "version": "1.0.0",
+  "description": "Phanbox node appliation",
+  "author": "Nickolay U. Kofanov",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "moment": "^2.18.1"
+  }
+}

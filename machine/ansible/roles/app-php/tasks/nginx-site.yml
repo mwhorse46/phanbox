@@ -1,0 +1,5 @@
+---
+- name: Set up default nginx site
+  become: true
+  template: src=nginx.default.j2 dest=/etc/nginx/sites-available/default
+  notify: restart nginx

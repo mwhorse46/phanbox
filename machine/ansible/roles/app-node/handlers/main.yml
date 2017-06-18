@@ -1,0 +1,4 @@
+---
+- name: restart app-node
+  become: true
+  systemd: name={{ app_node.service_name }} enabled=yes daemon_reload=yes state=restarted

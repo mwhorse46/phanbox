@@ -1,0 +1,5 @@
+---
+- name: Install composer dependecies
+  become: true
+  become_user: vagrant
+  shell: cd {{ app_php.root }} && composer install

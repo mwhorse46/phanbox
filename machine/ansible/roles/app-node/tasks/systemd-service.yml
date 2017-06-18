@@ -1,0 +1,9 @@
+---
+- name: Add node server application systemd service
+  become: true
+  template: src=app-node.service.j2 dest=/etc/systemd/system/{{ app_node.service_name }}.service
+  notify: restart app-node
+
+- name: Run node application service
+  become: true
+  service: name={{ app_node.service_name }} enabled=yes state=restarted

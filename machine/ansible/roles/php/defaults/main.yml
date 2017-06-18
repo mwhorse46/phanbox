@@ -1,0 +1,36 @@
+---
+php_ppa: "ppa:ondrej/php"
+php_packages:
+  - php7.1-fpm
+  - php7.1-cli
+  - php7.1-common
+  - php7.1-json
+  - php7.1-opcache
+  - php7.1-mysql
+  - php7.1-phpdbg
+  - php7.1-mbstring
+  - php7.1-gd
+  - php7.1-imap
+  - php7.1-ldap
+  - php7.1-dev
+  - php7.1-intl
+  - php7.1-gd
+  - php7.1-curl
+  - php7.1-zip
+  - php7.1-xml
+  - php-redis
+php_timezone: UTC
+php_upload_max_filesize: "20M"
+php_post_max_size: "20M"
+php_memory_limit: "1024M"
+php_max_execution_time: 180
+
+php_opcache_enable: 1
+php_opcache_revalidate_freq: 0
+php_opcache_opcache_validate_timestamps: 1
+php_opcache_max_accelerated_files: 20000
+php_opcache_memory_consumption: 192
+php_opcache_interned_strings_buffer: 16
+php_opcache_fast_shutdown: 1
+
+php_allow_url_fopen: 0

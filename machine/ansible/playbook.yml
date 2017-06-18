@@ -1,0 +1,12 @@
+---
+- hosts: vagrant
+  become: true
+  vars_files:
+    - vars/globals.yml
+    - vars/locals.yml
+  roles:
+    - server
+    - mysql
+    - redis
+    - app-php
+    - app-node

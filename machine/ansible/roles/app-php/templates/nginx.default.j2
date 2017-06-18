@@ -1,0 +1,37 @@
+server {
+  listen                80;
+  charset               utf-8;
+  server_name           {{ app_php.server_name }} www.{{ app_php.server_name }};
+  index  index.html index.htm index.php;
+  client_max_body_size 500m;
+
+  access_log            /var/log/nginx/{{ app_php.server_name }}.access.log;
+  error_log             /var/log/nginx/{{ app_php.server_name }}.error.log;
+
+  location / {
+    client_max_body_size 200m;
+
+    if (!-f $request_filename) {
+      rewrite ^(.*)$ /index.php?q=$1 last;
+      break;
+    }
+
+    root  {{ app_php.document_root }};
+    try_files $uri $uri/ index.php /index.php$is_args$args;
+  }
+
+  location ~ \.php$ {
+    root  {{ app_php.document_root }};
+    index  index.html index.htm index.php;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+    fastcgi_param APP_ENV dev;
+    fastcgi_param APPLICATION_ENV development;
+    fastcgi_pass unix:/run/php/php7.1-fpm.sock;
+    fastcgi_read_timeout 300;
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    include fastcgi_params;
+  }
+
+  sendfile off;
+}

@@ -1,0 +1,70 @@
+---
+# Retrieve the current hostname, because {{ ansible_hostname }} still contains the old name
+- shell: hostname
+  register: current_hostname
+
+- name: Add Percona apt signing key
+  become: true
+  apt_key: keyserver=keys.gnupg.net id=8507EFA5 state=present
+
+- name: Add Percona repository
+  become: true
+  apt_repository: repo='deb http://repo.percona.com/apt xenial main' state=present
+
+- name: Add Percona source repository
+  become: true
+  apt_repository: repo='deb-src http://repo.percona.com/apt xenial main' state=present
+
+- name: Update apt cache
+  become: true
+  apt: update_cache=true
+
+- name: Install python packages (required for ansible)
+  become: true
+  apt: pkg={{ item }} state=present
+  with_items:
+    - vim
+    - python-pycurl
+    - python-mysqldb
+
+- name: Install Percona packages
+  become: true
+  apt: pkg={{ item }} state=present update_cache=true
+  with_items:
+    - percona-server-common-5.7
+    - percona-server-client-5.7
+    - percona-server-server-5.7
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: mysql | Update root password for all root accounts
+  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
+  with_items:
+    - "{{ current_hostname.stdout | lower }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: mysql | Create databases
+  mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
+  register: db_created
+
+- block:
+  - name: mysql | Check dump file existence
+    stat: path={{ mysql.dump }}
+    register: dump_file
+  - name: mysql | Import dump
+    mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target={{ mysql.dump }}
+    when:
+      - db_created.changed
+      - dump_file.stat.exists
+  when: not((mysql.dump is undefined) or (mysql.dump is none) or (mysql.dump|trim == ''))
+
+- name: mysql | Ensure anonymous users are not in the database
+  mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql.root_password }}
+  with_items:
+    - localhost
+    - "{{ current_hostname.stdout | lower }}"
+
+- name: mysql | Create users
+  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}

@@ -1,0 +1,11 @@
+{
+  "name": "phanbox-app-php",
+  "type": "project",
+  "license": "proprietary",
+  "description": "Phanbox PHP appliation",
+  "author": "Nickolay U. Kofanov",
+  "require": {
+    "php": "^7.1",
+    "nesbot/carbon": "~1.18"
+  }
+}

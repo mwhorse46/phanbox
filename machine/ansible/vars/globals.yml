@@ -1,0 +1,21 @@
+---
+# Override defaults for php application
+app_php:
+  root: /vagrant/application/app-php
+  document_root: /vagrant/application/app-php/public
+  server_name: phanbox.local
+
+# Override defaults for node application
+app_node:
+  root: /vagrant/application/app-node
+  env: development
+  port: 3000
+  service_name: app-node
+
+# MySQL configurations
+mysql:
+  database: app
+  user: app
+  password: app
+  root_password: password
+  dump: /vagrant/dump.sql
