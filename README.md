@@ -1,4 +1,4 @@
-# Phanbox - basic vagrant machine for node.js and PHP applications
+# Phanbox - basic vagrant machine for Node.js and PHP applications
 
 ### Installation
 
@@ -23,35 +23,44 @@ The box is provisioned using [Ansible](https://www.ansible.com/) tool.
 The local host directory `./machine` is mounted to `/vagrant` directory inside vagrant machine
 The ansible playbook, roles, tasks and other resources are residing in `machine/ansible` directory, while the application specific code - inside `machine/application`.
 The provisioned vagrant machine has following items:
+
+* Ubuntu Xenial64 (16.04 LTS)
 * PHP application
     - PHP 7.1
     - nginx
     - xdebug
     - composer
-    - Application root: machine/application/app-php
-    - Document root: machine/application/app-php/public
+    - Application root: `machine/application/app-php`
+    - Document root: `machine/application/app-php/public`
 * Node.js application
     - Node.js 8.x
-    - Application root: machine/application/app-node
+    - Application root: `machine/application/app-node`
     - The application is run using `npm start` command
     - Port: 3000
     - Environemnt: 'development'
-    - Systemd service called `app-node` i.e. when you are in vagrant machine you may start/stop/restart it with `sudo service app-node start/stop/restart` command
+    - Systemd service called `app-node` i.e. when you are inside vagrant machine you may start/stop/restart it with `sudo service app-node start/stop/restart` command
 * MySQL Percona 5.7
 * Redis 3.x
 
 It may be easily extended and modified with a little knowledge of Ansible.
 
+#### Vagrant machine default settings (could be changed in Vagrantfile)
+
+- Hostname: phanbox.local
+- Allocated CPUs: 4 (cores)
+- Allocated Memory: 4096 (MB)
+- IP address: 10.10.10.10
+
 #### PHP Application
 
 If you do not need PHP application:
 
-- Go to machine/ansible/playbook.yml and delete **app-php** role from the list
-- Go to machine/ansible/vars/globals.yml and delete **app_php** section
+- Go to `machine/ansible/playbook.yml` and delete **app-php** role from the list
+- Go to `machine/ansible/vars/globals.yml` and delete **app_php** section
 
 If you want to customize it then you may take a look at **app_php** section to modify application/document roots, server name.
-It is pretty basic application and you may want to add provisioning logic to it. It is quite easy to do if you have a little knowledge of Ansible.
-You need to go to the `machine/ansible/roles/app-php` and add there whatever tasks and logic you need.
+It is pretty basic application and you may want to add provisioning logic to it. It is failrly easy to do if you have a little knowledge of Ansible.
+All you need is to go to the `machine/ansible/roles/app-php` and add there whatever tasks and logic you need.
 
 - See machine/ansible/vars/globals.yml
 
@@ -59,19 +68,21 @@ You need to go to the `machine/ansible/roles/app-php` and add there whatever tas
 
 If you do not need Node.js application then:
 
-- Go to machine/ansible/playbook.yml and delete **app-node** role from the list
-- Go to machine/ansible/vars/globals.yml and delete **app_node** section
+- Go to `machine/ansible/playbook.yml` and delete **app-node** role from the list
+- Go to `machine/ansible/vars/globals.yml` and delete **app_node** section
 
 To run Node.js application automatically there is systemd service created which is started automatically when vagrant machine is launched.
 If you want to interact with the service the you shoud do:
+
 - `vagrant ssh`
-- `sudo service restart` - will restart the node.js app
-- `sudo service stop` - will stop the node.js app (for example, you want to run it manually instead)
-- `sudo service start` - will start the sevice again
+- `sudo service app-node restart` - will restart the node.js app
+- `sudo service app-nodestop` - will stop the node.js app (for example, you want to run it manually instead)
+- `sudo service app-node start` - will start the sevice again
+- service logs may be found at `/var/log/app-node.log`
 
 If you want to customize it then you may take a look at **app_node** section to modify application root, port, systemd service name, environment.
-It is pretty basic application and you may want to add provisioning logic to it. It is quite easy to do if you have a little knowledge of Ansible.
-You need to go to the `machine/ansible/roles/app-node` and add there whatever tasks and logic you need.
+It is pretty basic application and you may want to add provisioning logic to it. It is failrly easy to do if you have a little knowledge of Ansible.
+All you need is to go to the `machine/ansible/roles/app-node` and add there whatever tasks and logic you need.
 
 #### MySQL
 
@@ -80,6 +91,6 @@ The default parameters for mysql server:
 - Username: *app*
 - Password: *app*
 - Database: *app*
-- Database dump (will be loaded only once during the first provision): `machine/dump.sql`
+- Database dump (will be imported only once during the first provisioning): `machine/dump.sql`
 
 If you want to customize these parameters see `machine/ansible/vars/globals.yml` **mysql** section

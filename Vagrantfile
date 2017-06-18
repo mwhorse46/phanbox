@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 # CentOS: yum -y install nfs-utils nfs-utils-lib
 # Mac OS X: it should be already pre-installed
 
-# The host name (you should also change it in the ansible/vars/globals.yml)
+# The host name (you should also change it in the machine/ansible/vars/globals.yml)
 HOSTNAME = 'phanbox.local'
 ALIASES = %w(www.phanbox.local api.phanbox.local)
 
@@ -80,7 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-interval", 5000]
   end
 
-  # Update "host" file for host/guest machines
+  # Update "hosts" file for host/guest machines
   if Vagrant.has_plugin? 'vagrant-hostmanager'
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
@@ -108,6 +108,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :shell, path: "machine/ansible/files/ansible.sh"
   end
 
+  # Parse ansible variables to extract the name of node.js application service
   ansible_vars_path = "#{File.dirname(__FILE__)}/machine/ansible/vars/globals.yml"
   ansible_vars = YAML.load_file(ansible_vars_path)
 
