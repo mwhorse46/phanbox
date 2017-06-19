@@ -11,11 +11,10 @@
 
 #### Test virtual hosts:
 
-* [http://www.phanbox.local/](http://www.phanbox.local/) - PHP application home page (index.php)
-* [http://phanbox.local/](http://phanbox.local/)
+* [http://[www].phanbox.local/](http://phanbox.local/) - PHP application home page (index.php). It also contains healthcheck logic to verify that PHP app is successfully connected to MySQL and Redis.
 * [http://phanbox.local/phpinfo.php](http://phanbox.local/phpinfo.php) - PHP info page
 * [http://phanbox.local/index.html](http://phanbox.local/index.html) - Static HTML page served by NGINX
-* [http://phanbox.local:3000](http://phanbox.local:3000) - Node.js application home page
+* [http://phanbox.local:3000](http://phanbox.local:3000) - Node.js application home page. It also contains healthcheck logic to verify that Node.js app is successfully connected to MySQL and Redis.
 
 ### What does the box consist of?
 
@@ -26,7 +25,7 @@ The provisioned vagrant machine has following items:
 
 * Ubuntu Xenial64 (16.04 LTS)
 * PHP application
-    - PHP 7.1
+    - PHP-FPM 7.1
     - nginx
     - xdebug
     - composer
@@ -46,10 +45,10 @@ It may be easily extended and modified with a little knowledge of Ansible.
 
 #### Vagrant machine default settings (could be changed in Vagrantfile)
 
-- Hostname: phanbox.local
-- Allocated CPUs: 4 (cores)
-- Allocated Memory: 4096 (MB)
-- IP address: 10.10.10.10
+- Hostname: **phanbox.local**
+- Allocated CPUs: **4** (cores)
+- Allocated Memory: **4096** (MB)
+- IP address: **10.10.10.10**
 
 #### PHP Application
 

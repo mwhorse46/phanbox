@@ -8,6 +8,9 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "moment": "^2.18.1"
+    "bluebird": "^3.5.0",
+    "moment": "^2.18.1",
+    "mysql": "^2.13.0",
+    "redis": "^2.7.1"
   }
 }
