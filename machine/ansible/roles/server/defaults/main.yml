@@ -3,8 +3,11 @@ server_packages:
   - imagemagick
   - vim
   - curl
+  - wget
   - git
   - build-essential
   - libssl-dev
+  - python-minimal
+  - python-software-properties
 server_timezone: UTC
 server_locale: en_US.UTF-8

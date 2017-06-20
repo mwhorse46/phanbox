@@ -1,36 +1,35 @@
 ---
 - name: Update apt
-  become: yes
+  become: true
   apt: update_cache=yes
 
-- name: Install System Packages
-  become: yes
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - curl
-    - wget
-    - python-software-properties
+- name: Make sure aptitude is installed
+  become: true
+  apt: pkg=aptitude state=latest
 
-- name: Install Extra Packages
-  become: yes
+- name: Update all packages to the latest version
+  apt: upgrade=yes
+
+- name: Install System Packages
+  become: true
   apt: pkg={{ item }} state=latest
   with_items: "{{ server_packages }}"
   when: server_packages is defined
 
 - name: Configure the timezone
-  become: yes
+  become: true
   template: src=timezone.j2 dest=/etc/timezone
 
 - name: More Configure the timezone
-  become: yes
+  become: true
   file: src=/usr/share/zoneinfo/{{server_timezone}} dest=/etc/localtime state=link force=yes backup=yes
 
 - name: Set default system language pack
   shell: locale-gen {{ server_locale }}
-  become: yes
+  become: true
 
 - name: Set default system language vars
-  become: yes
+  become: true
   lineinfile:
     dest: /etc/default/locale
     regexp: "{{ item.regexp }}"
@@ -40,3 +39,4 @@
     - { regexp: "^LANGUAGE\b", line: "LANGUAGE={{ server_locale }}" }
     - { regexp: "^LC_ALL\b", line: "LC_ALL={{ server_locale }}" }
 
+- include: cachefilesd.yml

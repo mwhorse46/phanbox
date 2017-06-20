@@ -1,3 +1,4 @@
+# {{ ansible_managed }}
 server {
   listen                80;
   charset               utf-8;
@@ -30,6 +31,7 @@ server {
     fastcgi_pass unix:/run/php/php7.1-fpm.sock;
     fastcgi_read_timeout 300;
     fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    fastcgi_param APP_ENV "{{ app_node.env | default('development') }}";
     include fastcgi_params;
   }
 

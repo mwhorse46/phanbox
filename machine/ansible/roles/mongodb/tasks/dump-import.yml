@@ -1,0 +1,42 @@
+---
+- name: MongoDB | Add application user
+  mongodb_user:
+    login_user: root
+    login_password: "{{ mongodb.root_password }}"
+    database: "{{ mongodb.database }}"
+    name: "{{ mongodb.user }}"
+    password: "{{ mongodb.password }}"
+    roles: readWrite,dbAdmin,userAdmin
+    state: present
+
+- name: MongoDB | Add application reader user
+  mongodb_user:
+    login_user: root
+    login_password: "{{ mongodb.root_password }}"
+    database: "{{ mongodb.database }}"
+    name: "{{ mongodb.database }}_reader"
+    password: "{{ mongodb.database }}_reader"
+    roles: read
+    state: present
+  register: reader_created
+
+- block:
+  - name: MongoDB | Check dump directory existence
+    stat: path={{ mongodb.dump_directory }}
+    register: dump_directory
+  - name: MongoDB | Import dump
+    shell: |
+      ls -1 {{ mongodb.dump_directory }}/*.json | sed 's/.json$//' | while read FILENAME; do
+        COLLECTION=$(basename $FILENAME)
+        mongoimport \
+        --username {{ mongodb.user }} \
+        --password {{ mongodb.password }} \
+        --db {{ mongodb.database }} \
+        {{ ((mongodb.dump_array_mode is defined) and mongodb.dump_array_mode) | ternary('--jsonArray', '') }} \
+        --collection $COLLECTION --file $FILENAME.json
+      done
+      exit 0
+    when:
+#      - reader_created.changed
+      - dump_directory.stat.exists and dump_directory.stat.isdir
+  when: not((mongodb.dump_directory is undefined) or (mongodb.dump_directory is none) or (mongodb.dump_directory|trim == ''))

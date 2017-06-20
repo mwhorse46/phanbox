@@ -40,13 +40,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # despite to vagrant convention that the default user is named always "vagrant"
   # https://bugs.launchpad.net/cloud-images/+bug/1569237
   config.vm.box = 'bento/ubuntu-16.04'
+  config.vm.box_version = '2.3.5'
   config.vm.hostname = HOSTNAME
   config.vm.network :private_network, :ip => IP_ADDRESS
 
   #config.ssh.insert_key = false
   config.ssh.forward_agent = true
 
-  # Prevent TTY Errors (copied from laravel/homestead: "homestead.rb" file)... By default this is "bash -l".
+  # Prevent TTY Errors (copied from laravel/homestead: "homestead.rb" file)... By default this is "bash -l"
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   # Setup directories synchronization mode
@@ -58,11 +59,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }
   else
     sync_options = {
-      :nfs => { :mount_options => ["dmode=775", "fmode=775", "actimeo=1", "lookupcache=non", "rw", "vers=3", "tcp", "fsc"] }
+      :nfs => { :mount_options => ["dmode=775", "fmode=775", "actimeo=2", "lookupcache=non", "rw", "vers=3", "tcp", "fsc"] }
     }
   end
 
-  config.vm.synced_folder "./machine", "/vagrant", sync_options
+  config.vm.synced_folder "./machine/", "/vagrant/", sync_options
 
   # Configure VirtualBox provider
   config.vm.provider :virtualbox do |vb|
@@ -117,4 +118,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     app_node_service = ansible_vars['app_node']['service_name']
     config.vm.provision "shell", run: "always", inline: "systemctl restart #{app_node_service}"
   end
+
+  # Always make sure cachefilesd is running
+  config.vm.provision "shell", run: "always", inline: "systemctl start cachefilesd"
 end

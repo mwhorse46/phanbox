@@ -1,0 +1,24 @@
+---
+- name: MySQL | Create databases
+  mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
+  register: db_created
+
+- block:
+  - name: MySQL | Check dump file existence
+    stat: path={{ mysql.dump_file }}
+    register: dump_file
+  - name: MySQL | Import dump
+    mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target={{ mysql.dump_file }}
+    when:
+      - db_created.changed
+      - dump_file.stat.exists and not(dump_file.stat.isdir)
+  when: not((mysql.dump_file is undefined) or (mysql.dump_file is none) or (mysql.dump_file|trim == ''))
+
+- name: MySQL | Ensure anonymous users are not in the database
+  mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql.root_password }}
+  with_items:
+    - localhost
+    - "{{ current_hostname.stdout | lower }}"
+
+- name: MySQL | Create application user
+  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}

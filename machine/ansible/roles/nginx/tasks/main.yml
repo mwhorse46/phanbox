@@ -2,3 +2,6 @@
 - name: Install Nginx
   become: true
   apt: pkg=nginx state=latest
+
+- name: Insure Nginx is running correctly
+  systemd: name=nginx state=started enabled=yes

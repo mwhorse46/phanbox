@@ -1,0 +1,6 @@
+---
+- name: mongodb restart
+  systemd: name=mongod state=restarted
+
+- name: mongodb reload
+  systemd: name=mongod state=reloaded

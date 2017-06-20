@@ -1,10 +1,8 @@
 ---
 - name: restart nginx
   become: true
-  service: name=nginx enabled=yes state=restarted
-  listen: restart app-php
+  service: name=nginx state=restarted enabled=yes
 
 - name: restart php-fpm
   become: true
-  service: name=php7.1-fpm enabled=yes state=restarted
-  listen: restart app-php
+  service: name=php7.1-fpm state=restarted enabled=yes

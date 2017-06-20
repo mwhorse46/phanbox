@@ -1,0 +1,8 @@
+---
+- name: restart cachefilesd
+  become: true
+  systemd: name=cachefilesd state=restarted enabled=yes
+  register: cache_service
+  until: (cache_service.status is defined) and (cache_service.status.Result == 'success')
+  retries: 4
+  delay: 15

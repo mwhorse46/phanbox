@@ -1,14 +1,15 @@
 ---
 # Override defaults for php application
 app_php:
+  env: development # Available as getenv('APP_ENV') in PHP app
   root: /vagrant/application/app-php
   document_root: /vagrant/application/app-php/public
   server_name: phanbox.local
 
 # Override defaults for node application
 app_node:
+  env: development # Available as process.env['NODE_ENV'] in Node.js app
   root: /vagrant/application/app-node
-  env: development
   port: 3000
   service_name: app-node
 
@@ -17,5 +18,14 @@ mysql:
   database: app
   user: app
   password: app
+  root_password: password # You won't be able to change it after first provisioning
+  dump_file: /vagrant/dump/mysql
+
+# MongoDB configurations
+mongodb:
+  database: app
+  user: app
+  password: app
   root_password: password
-  dump: /vagrant/dump.sql
+  dump_directory: /vagrant/dump/mongodb
+  dump_array_mode: true

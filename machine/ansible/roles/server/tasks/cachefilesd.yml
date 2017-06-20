@@ -1,0 +1,12 @@
+---
+- name: Install Cachefilesd Packages
+  become: true
+  apt: pkg=cachefilesd state=latest
+
+- name: Enable Cachefilesd
+  become: true
+  copy: src=cachefilesd dest=/etc/default/cachefilesd mode=0755
+  notify: restart cachefilesd
+
+- name: Insure Cachefilesd is running correctly
+  systemd: name=cachefilesd state=started enabled=yes

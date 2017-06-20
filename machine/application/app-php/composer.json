@@ -6,6 +6,7 @@
   "author": "Nickolay U. Kofanov",
   "require": {
     "php": "^7.1",
-    "nesbot/carbon": "~1.18"
+    "nesbot/carbon": "~1.18",
+    "mongodb/mongodb": "^1.1"
   }
 }

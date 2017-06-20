@@ -37,7 +37,10 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
-- name: mysql | Update root password for all root accounts
+- name: MySQL | Insure daemon is running correctly
+  systemd: name=mysql state=started enabled=yes
+
+- name: MySQL | Update root password for all root accounts
   mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
   with_items:
     - "{{ current_hostname.stdout | lower }}"
@@ -45,26 +48,8 @@
     - ::1
     - localhost
 
-- name: mysql | Create databases
-  mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
-  register: db_created
+- name: MySQL | Create default configuration template
+  template: src=mysqld.conf.j2 dest=/etc/mysql/percona-server.conf.d/mysqld.cnf owner=root group=root mode=0644
+  notify: mysql restart
 
-- block:
-  - name: mysql | Check dump file existence
-    stat: path={{ mysql.dump }}
-    register: dump_file
-  - name: mysql | Import dump
-    mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target={{ mysql.dump }}
-    when:
-      - db_created.changed
-      - dump_file.stat.exists
-  when: not((mysql.dump is undefined) or (mysql.dump is none) or (mysql.dump|trim == ''))
-
-- name: mysql | Ensure anonymous users are not in the database
-  mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mysql.root_password }}
-  with_items:
-    - localhost
-    - "{{ current_hostname.stdout | lower }}"
-
-- name: mysql | Create users
-  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+- include: dump-import.yml

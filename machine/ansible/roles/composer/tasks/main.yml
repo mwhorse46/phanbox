@@ -4,7 +4,11 @@
 - name: Assures /home/vagrant/.composer directory exists
   file: path=/home/vagrant/.composer state=directory
 
+- name: Create composer config directory
+  file: path=/home/vagrant/.composer state=directory owner=vagrant group=vagrant mode=0755
+
 - name: Configure composer GitHub token
-  become: yes
+  become: true
+  become_user: vagrant
   template: src=auth.json.j2 dest=/home/vagrant/.composer/auth.json
   when: composer.github_token is defined

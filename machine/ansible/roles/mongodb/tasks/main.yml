@@ -1,0 +1,44 @@
+---
+- name: MongoDB | Fetch MongoDB signing key
+  become: true
+  command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+
+- name: MongoDB | Add MongoDB repository
+  become: true
+  shell:
+    echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+    creates=/etc/apt/sources.list.d/mongodb-org-3.4.list
+
+- name: MongoDB | Install latest MongoDB release
+  apt: pkg=mongodb-org state=present update_cache=yes
+
+- name: MongoDB | Insure daemon is running correctly
+  systemd: name=mongod state=started enabled=yes
+
+- name: MongoDB | Install python package (required for ansible)
+  become: true
+  apt: pkg=python-pymongo state=present
+
+- name: MongoDB | Persist root password
+  become: true
+  copy:
+    content: "{{ mongodb.root_password }}"
+    dest: /root/.mongodb_root_password
+    mode: 0555
+  register: mongodb_root_password
+
+- name: MongoDB | Add root user
+  mongodb_user:
+    database: admin
+    name: root
+    password: "{{ mongodb.root_password }}"
+    roles: readWriteAnyDatabase,userAdminAnyDatabase,dbAdminAnyDatabase,root
+    state: present
+    update_password: on_create
+  when: mongodb_root_password.changed
+
+- name: MongoDB | Create default configuration template
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+  notify: mongodb restart
+
+- include: dump-import.yml
