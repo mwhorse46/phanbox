@@ -1,0 +1,30 @@
+---
+- name: Add Yarn GPG key
+  become: true
+  apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- name: Ensure Yarn sources list file exists
+  become: true
+  file:
+    path: /etc/apt/sources.list.d/yarn.list
+    owner: root
+    mode: 0644
+    state: touch
+
+- name: Ensure Yarn package is in sources list
+  become: true
+  lineinfile:
+    dest: /etc/apt/sources.list.d/yarn.list
+    regexp: 'deb http://dl.yarnpkg.com/debian/ stable main'
+    line: 'deb http://dl.yarnpkg.com/debian/ stable main'
+    state: present
+
+- name: Update APT cache
+  become: true
+  apt: update_cache=yes
+
+- name: Yarn Install
+  become: true
+  package: name=yarn state=latest

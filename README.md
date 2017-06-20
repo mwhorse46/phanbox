@@ -43,6 +43,8 @@ The provisioned vagrant machine has following items:
     - Environment (APP_ENV): 'development'
 * Node.js application
     - Node.js 8.x
+    - npm 5.x
+    - yarn
     - Application root: `machine/application/app-node`
     - The application is run using `npm start` command
     - Port: 3000
