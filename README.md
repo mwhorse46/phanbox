@@ -20,7 +20,7 @@
 
 #### Test virtual hosts:
 
-* [http://[www].phanbox.local/](http://phanbox.local/) - PHP application home page (index.php). It also contains healthcheck logic to verify that PHP app is successfully connected to MySQL, MongoDB and Redis.
+* [http://[www].phanbox.local](http://phanbox.local) - PHP application home page (index.php). It also contains healthcheck logic to verify that PHP app is successfully connected to MySQL, MongoDB and Redis.
 * [http://phanbox.local/phpinfo.php](http://phanbox.local/phpinfo.php) - PHP info page
 * [http://phanbox.local/index.html](http://phanbox.local/index.html) - Static HTML page served by NGINX
 * [http://phanbox.local:3000](http://phanbox.local:3000) - Node.js application home page. It also contains healthcheck logic to verify that Node.js app is successfully connected to MySQL, MongoDB and Redis.
@@ -45,6 +45,7 @@ The provisioned vagrant machine has following items:
     - Node.js 8.x
     - npm 5.x
     - yarn
+    - nodemon, gulp, grunt (installed globally)
     - Application root: `machine/application/app-node`
     - The application is run using `npm start` command
     - Port: 3000

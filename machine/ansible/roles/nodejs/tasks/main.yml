@@ -20,6 +20,8 @@
     mode: 0644
 
 - name: Ensure npm global packages are installed.
+  become: true
+  become_user: "{{ nodejs_install_npm_user }}"
   npm:
     name: "{{ item.name | default(item) }}"
     version: "{{ item.version | default('latest') }}"
@@ -30,10 +32,5 @@
     NODE_PATH: "{{ npm_config_prefix }}/lib/node_modules"
     NPM_CONFIG_UNSAFE_PERM: "{{ npm_config_unsafe_perm }}"
   with_items: "{{ nodejs_npm_global_packages }}"
-
-- name: Install packages defined in a given package.json.
-  npm:
-    path: "{{ nodejs_package_json_path }}"
-  when: nodejs_package_json_path is defined and nodejs_package_json_path
 
 - include: yarn.yml
