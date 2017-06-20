@@ -18,6 +18,7 @@
     password: "{{ mongodb.database }}_reader"
     roles: read
     state: present
+    update_password: on_create
   register: reader_created
 
 - block:
@@ -37,6 +38,6 @@
       done
       exit 0
     when:
-#      - reader_created.changed
+      - reader_created.changed
       - dump_directory.stat.exists and dump_directory.stat.isdir
   when: not((mongodb.dump_directory is undefined) or (mongodb.dump_directory is none) or (mongodb.dump_directory|trim == ''))

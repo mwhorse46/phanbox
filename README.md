@@ -9,7 +9,7 @@
 * If your application has too many composer dependencies and github asks for authorization then you need to copy `./ansible/vars/locals.yml.dist` to `./ansible/vars/locals.yml` and put there your GitHub token.
 * Run `vagrant up`
 * Wait until provisioning is finished...
-* You have Linux or Mac OS X then you'd better perform `vagrant reload` after provisioning is finished to get maximum performance of your vagrant machine
+* If you have Linux or Mac OS X then you'd better perform `vagrant reload` after provisioning is finished to get maximum performance of your vagrant machine
 
 ### Regular usage:
 
@@ -40,13 +40,13 @@ The provisioned vagrant machine has following items:
     - Composer
     - Application root: `machine/application/app-php`
     - Document root: `machine/application/app-php/public`
-    - Environemnt (APP_ENV): 'development'
+    - Environment (APP_ENV): 'development'
 * Node.js application
     - Node.js 8.x
     - Application root: `machine/application/app-node`
     - The application is run using `npm start` command
     - Port: 3000
-    - Environemnt (NODE_ENV): 'development'
+    - Environment (NODE_ENV): 'development'
     - Daemonized with Systemd service i.e. when you are inside vagrant machine you may start/stop/restart it with `sudo service app-node start/stop/restart` command
 * MySQL Percona 5.7
 * MongoDB 3.4
@@ -105,7 +105,7 @@ If you do not need MySQL for your application:
 The default parameters for mysql server:
 
 - User: **app**
-- Password: **app*
+- Password: **app**
 - Database: **app**
 - ROOT PASSWORD: **password**
 - Database dump file (will be imported only once during the first provisioning): `machine/dump/mysql.sql`
@@ -122,7 +122,7 @@ If you do not need MongoDB for your application:
 The default parameters for MongoDB server:
 
 - User: **app**
-- Password: **app*
+- Password: **app**
 - Database: **app**
 - ROOT PASSWORD: **password**
 - Database dump directory (will be imported only once during the first provisioning): `machine/dump/mongodb` -

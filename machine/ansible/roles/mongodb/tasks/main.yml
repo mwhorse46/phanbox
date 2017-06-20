@@ -22,10 +22,10 @@
 - name: MongoDB | Persist root password
   become: true
   copy:
-    content: "{{ mongodb.root_password }}"
-    dest: /root/.mongodb_root_password
+    content: ""
+    dest: /root/.mongodb_root_created
     mode: 0555
-  register: mongodb_root_password
+  register: mongodb_root_created
 
 - name: MongoDB | Add root user
   mongodb_user:
@@ -35,7 +35,7 @@
     roles: readWriteAnyDatabase,userAdminAnyDatabase,dbAdminAnyDatabase,root
     state: present
     update_password: on_create
-  when: mongodb_root_password.changed
+  when: mongodb_root_created.changed
 
 - name: MongoDB | Create default configuration template
   template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
