@@ -1,6 +1,6 @@
 ---
 - name: Install xDebug
-  become: yes
+  become: true
   apt: pkg=php-xdebug state=latest
 
 - name: Set xDebug parameters

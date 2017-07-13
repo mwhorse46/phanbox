@@ -20,6 +20,7 @@ php_packages:
   - php7.1-xml
   - php-redis
   - php-mongodb
+  - php-ast
 php_timezone: UTC
 php_upload_max_filesize: "128M"
 php_post_max_size: "128M"

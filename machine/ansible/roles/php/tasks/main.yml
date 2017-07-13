@@ -1,7 +1,12 @@
 ---
+- shell: dpkg-query -W 'php7.1'
+  ignore_errors: true
+  register: is_php_installed
+
 - name: Remove all existing PHP packages
   become: true
-  apt: pkg=php7* autoremove=yes purge=yes
+  apt: pkg=php7* autoremove=yes purge=yes state=absent force=yes
+  when: is_php_installed|failed
 
 - name: Add repository for Ubuntu
   become: true

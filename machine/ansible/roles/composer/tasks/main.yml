@@ -12,3 +12,8 @@
   become_user: vagrant
   template: src=auth.json.j2 dest=/home/vagrant/.composer/auth.json
   when: composer.github_token is defined
+
+- name: Install php-cs-fixer
+  shell: wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -O php-cs-fixer && chmod a+x php-cs-fixer && mv php-cs-fixer /usr/local/bin/php-cs-fixer
+  args:
+    creates: /usr/local/bin/php-cs-fixer

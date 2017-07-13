@@ -8,6 +8,7 @@
   apt: pkg=aptitude state=latest
 
 - name: Update all packages to the latest version
+  become: true
   apt: upgrade=yes
 
 - name: Install System Packages
@@ -38,5 +39,8 @@
     - { regexp: "^LANG\b", line: "LANG={{ server_locale }}" }
     - { regexp: "^LANGUAGE\b", line: "LANGUAGE={{ server_locale }}" }
     - { regexp: "^LC_ALL\b", line: "LC_ALL={{ server_locale }}" }
+
+- name: Set default GIT editor
+  shell: git config --global core.editor vim
 
 - include: cachefilesd.yml
